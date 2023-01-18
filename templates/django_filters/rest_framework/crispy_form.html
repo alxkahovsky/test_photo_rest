@@ -1,0 +1,40 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+<h2>{% trans "Field filters" %}</h2>
+{% crispy filter.form %}
+
+<br>
+<!--suppress HtmlUnknownTarget -->
+<form method="get" action="?">
+    <label for="search" class="control-label">Доп. задача с автозаполнением</label>
+    <input type="text" class="textinput textInput form-control" id="search" list="names_list" name="person">
+    <datalist id="names_list">
+
+    </datalist>
+    <br>
+    <input type="submit" name="" value="Поиск с автозаполнением" class="btn btn-primary btn-default" id="submit-id-">
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script>
+    $('#search').bind('input', function(){
+        let form_input = $(this).val();
+        $.ajax({
+            data: $(this).serialize(),
+            type: 'GET',
+            url: "search_autocompliete",
+            success: function (response) {
+                $('#names_list').empty();
+                $.each(response.result,function(index,value){
+                    jQuery('<option>', {
+                    id: 'name_' + index,
+                    text: value
+                    }).appendTo('#names_list')});
+                },
+            error: function (response) {
+                console.log(response.responseJSON.errors)
+            }
+        });
+        return false;
+    });
+</script>
