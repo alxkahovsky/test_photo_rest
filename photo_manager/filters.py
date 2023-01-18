@@ -14,6 +14,8 @@ class PhotoFilter(filters.FilterSet):
     date_lte = filters.DateFilter(field_name='created__date', method='filter_date_lte', label='Дата до')
     date_gte = filters.DateFilter(field_name='created__date', method='filter_date_gte', label='Дата после')
     person = filters.CharFilter(field_name='meta', method='filter_person', label='По имени')
+    # location_point = filters.CharFilter(field_name='meta', method='filter_person', label='По точке локации')
+    radius = filters.BaseCSVFilter(field_name='meta', method='filter_location', label='По точке и радиус')
 
     def check_avilable(self, queryset, field_name, value):
         print(queryset)
@@ -38,6 +40,14 @@ class PhotoFilter(filters.FilterSet):
         print(value)
         queryset = queryset.filter(meta__marked_persons__icontains=value)
         print(queryset)
+        return queryset
+
+    def filter_location(self, queryset, field_name, value):
+        print(value)
+        position = ', '.join(value[:2])
+        print(position)
+        radius = int(value[2])
+        print(radius)
         return queryset
 
     class Meta:
