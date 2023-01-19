@@ -8,7 +8,7 @@
 <!--suppress HtmlUnknownTarget -->
 <form method="get" action="?">
     <label for="search" class="control-label">Доп. задача с автозаполнением</label>
-    <input type="text" class="textinput textInput form-control" id="search" list="names_list" name="person">
+    <input type="text" class="textinput textInput form-control" id="search" list="names_list" name="person" autocomplete="off">
     <datalist id="names_list">
 
     </datalist>
@@ -19,22 +19,29 @@
 <script>
     $('#search').bind('input', function(){
         let form_input = $(this).val();
-        $.ajax({
-            data: $(this).serialize(),
-            type: 'GET',
-            url: "search_autocompliete",
-            success: function (response) {
-                $('#names_list').empty();
-                $.each(response.result,function(index,value){
-                    jQuery('<option>', {
-                    id: 'name_' + index,
-                    text: value
-                    }).appendTo('#names_list')});
+        if (form_input.length > 2) {
+            console.log(form_input)
+            $.ajax({
+                data: $(this).serialize(),
+                type: 'GET',
+                url: "/autocompliete",
+                success: function (response) {
+                    $('#names_list').empty();
+                    $.each(response.result, function (index, value) {
+                        jQuery('<option>', {
+                            id: 'name_' + index,
+                            text: value
+                        }).appendTo('#names_list')
+                    });
                 },
-            error: function (response) {
-                console.log(response.responseJSON.errors)
-            }
-        });
-        return false;
+                error: function (response) {
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        }
+        else {
+            $('#names_list').empty();
+        }
     });
 </script>
