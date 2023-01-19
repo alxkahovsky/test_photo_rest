@@ -32,7 +32,7 @@ class PhotosListView(ListModelMixin, CreateModelMixin, RetrieveModelMixin,  view
         if s.is_valid():
             s.validated_data['available'] = True
             s.save()
-            return Response({'errors': None}, status=status.HTTP_201_CREATED)
+            return Response(s.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'errors': s.errors}, status=status.HTTP_400_BAD_REQUEST)
 

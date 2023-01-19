@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "photo_manager.apps.PhotoManagerConfig",
     'django_filters',
     'crispy_forms',
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
